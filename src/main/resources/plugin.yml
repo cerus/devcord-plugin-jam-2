@@ -1,0 +1,7 @@
+name: ${project.name}
+version: ${project.version}
+main: dev.cerus.pluginjam.PluginJamPlugin
+authors: [ lus, cerus ]
+api-version: 1.19
+prefix: "PluginJam"
+description: ${project.description}

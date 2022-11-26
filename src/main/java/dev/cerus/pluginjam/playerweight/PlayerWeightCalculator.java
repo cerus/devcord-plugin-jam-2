@@ -4,8 +4,10 @@ import dev.cerus.pluginjam.itemweight.ItemWeightRegistry;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
@@ -39,6 +41,15 @@ public class PlayerWeightCalculator extends BukkitRunnable {
                 continue;
             }
             weight += item.getAmount() * this.itemWeightRegistry.lookup(item.getType()).orElse(0f);
+            if (item.getItemMeta() instanceof final BlockStateMeta meta
+                    && meta.getBlockState() instanceof final Container container) {
+                for (final ItemStack innerItem : container.getInventory()) {
+                    if (innerItem == null) {
+                        continue;
+                    }
+                    weight += innerItem.getAmount() * this.itemWeightRegistry.lookup(innerItem.getType()).orElse(0f);
+                }
+            }
         }
         weight += player.getArrowsInBody() * this.itemWeightRegistry.lookup(Material.ARROW).orElse(0f);
         return weight;

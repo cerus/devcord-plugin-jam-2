@@ -26,12 +26,7 @@ public class PlayerWeightCalculator extends BukkitRunnable {
 
     @Override
     public void run() {
-        this.playerWeights.clear();
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            final float weight = this.calculatePlayerWeight(player);
-            this.playerWeights.put(player.getUniqueId(), weight);
-            player.sendActionBar(Component.text(String.format("§aDu wiegst aktuell §b%.2fkg§a.", weight)));
-        });
+        Bukkit.getOnlinePlayers().forEach(this::updatePlayerWeight);
     }
 
     private float calculatePlayerWeight(final Player player) {
@@ -52,6 +47,24 @@ public class PlayerWeightCalculator extends BukkitRunnable {
             }
         }
         weight += player.getArrowsInBody() * this.itemWeightRegistry.lookup(Material.ARROW).orElse(0f);
+        return weight;
+    }
+
+    private void updatePlayerWeight(final Player player) {
+        final float weight = this.calculatePlayerWeight(player);
+        this.playerWeights.put(player.getUniqueId(), weight);
+        player.sendActionBar(Component.text(this.buildActionBarMessage(weight)));
+    }
+
+    private String buildActionBarMessage(final float weight) {
+        return String.format("§aDu wiegst aktuell §b%.2fkg§a.", weight);
+    }
+
+    public float getPlayerWeight(final UUID uuid) {
+        final Float weight = this.playerWeights.get(uuid);
+        if (weight == null) {
+            return 0;
+        }
         return weight;
     }
 

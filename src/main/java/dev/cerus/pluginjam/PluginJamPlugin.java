@@ -2,7 +2,7 @@ package dev.cerus.pluginjam;
 
 import dev.cerus.pluginjam.itemweight.ItemWeightRegistry;
 import dev.cerus.pluginjam.playerweight.PlayerWeightCalculator;
-import org.bukkit.Material;
+import dev.cerus.pluginjam.playerweight.WeightEffectApplier;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,9 +19,13 @@ public class PluginJamPlugin extends JavaPlugin {
                 this,
                 ServicePriority.Normal
         );
-        itemWeightRegistry.register(Material.ARROW, 20);
 
-        new PlayerWeightCalculator(itemWeightRegistry).runTaskTimerAsynchronously(this, 0, 40);
+        final PlayerWeightCalculator playerWeightCalculator = new PlayerWeightCalculator(itemWeightRegistry);
+        playerWeightCalculator.runTaskTimerAsynchronously(this, 0, 40);
+
+        final WeightEffectApplier weightEffectApplier = new WeightEffectApplier(playerWeightCalculator);
+        this.getServer().getPluginManager().registerEvents(weightEffectApplier, this);
+        weightEffectApplier.runTaskTimer(this, 0, 20);
     }
 
     @Override

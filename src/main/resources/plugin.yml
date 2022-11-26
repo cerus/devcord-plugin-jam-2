@@ -5,3 +5,7 @@ authors: [ lus, cerus ]
 api-version: 1.19
 prefix: "PluginJam"
 description: ${project.description}
+
+commands:
+  fettsack:
+    description: "F"

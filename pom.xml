@@ -8,7 +8,7 @@
     <artifactId>devcord-plugin-jam-2</artifactId>
     <version>1.0.0</version>
     <name>fettsack</name>
-    <description>"The more you have the worse it is" - This plugin is basically a huge FUCK YOU.</description>
+    <description>\"The more you have the worse it is\" - This plugin is basically a huge FUCK YOU.</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

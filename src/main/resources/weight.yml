@@ -1,0 +1,32 @@
+# https://www.finesoftware.eu/help/geo5/en/unit-weight-of-rocks-01/
+# https://mojobob.com/roleplay/weight_chart.html
+# Google: "Unit weight of XYZ"
+
+'#blocks:logs': 400
+'#blocks:dirt': 1400
+'#blocks:saplings': 0.1
+'minecraft:tuff': 2140
+'minecraft:netherrack': 1000
+'#blocks:nylium': 1000
+'minecraft:bedrock': 3059
+'minecraft:stone': 2850
+'#blocks:gold_ores': 2447
+'#blocks:iron_ores': 2447
+'#blocks:coal_ores': 2447
+'#blocks:diamond_ores': 2447
+'#blocks:emerald_ores': 2447
+'#blocks:lapis_ores': 2447
+'#blocks:redstone_ores': 2447
+'#blocks:copper_ores': 2447
+'minecraft:nether_quartz_ore': 2447
+'minecraft:ancient_debris': 2702
+'minecraft:amethyst_cluster': 5
+'minecraft:large_amethyst_bud': 3.5
+'minecraft:medium_amethyst_bud': 2
+'minecraft:small_amethyst_bud': 1
+'minecraft:amethyst_shard': 0.25
+'minecraft:copper_block': 8960
+'minecraft:exposed_copper': 8960
+'minecraft:weathered_copper': 8960
+'minecraft:oxidized_copper': 8960
+'#blocks:leaves': 10

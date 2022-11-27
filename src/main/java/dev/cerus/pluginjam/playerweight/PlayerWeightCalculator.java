@@ -1,6 +1,10 @@
 package dev.cerus.pluginjam.playerweight;
 
 import dev.cerus.pluginjam.itemweight.ItemWeightRegistry;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,10 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerWeightCalculator extends BukkitRunnable {
 
@@ -53,11 +53,11 @@ public class PlayerWeightCalculator extends BukkitRunnable {
     private void updatePlayerWeight(final Player player) {
         final float weight = this.calculatePlayerWeight(player);
         this.playerWeights.put(player.getUniqueId(), weight);
-        player.sendActionBar(Component.text(this.buildActionBarMessage(weight)));
+        player.sendActionBar(Component.text(this.buildActionBarMessage(weight, player.getWalkSpeed())));
     }
 
-    private String buildActionBarMessage(final float weight) {
-        return String.format("§aDu wiegst aktuell §b%.2fkg§a.", weight);
+    private String buildActionBarMessage(final float weight, final float speed) {
+        return String.format(Locale.GERMANY, "§aDu wiegst aktuell §b%,.2fkg§a.", weight);
     }
 
     public float getPlayerWeight(final UUID uuid) {

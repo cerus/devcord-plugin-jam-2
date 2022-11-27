@@ -14,6 +14,8 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 public class RecipeItemWeightCalculator implements ItemWeightCalculator {
 
+    public static boolean recalc = false;
+
     private final Material itemType;
 
     public RecipeItemWeightCalculator(final Material itemType) {
@@ -25,21 +27,27 @@ public class RecipeItemWeightCalculator implements ItemWeightCalculator {
         if (itemType != this.itemType) {
             throw new IllegalStateException("Incompatible item type");
         }
+        if (!recalc && registry.lookup(itemType).isPresent()) {
+            return registry.lookup(itemType).get();
+        }
+        recalc = false;
 
-        final List<Recipe> recipes = Bukkit.getRecipesFor(new ItemStack(itemType));
+        final List<Recipe> recipes = Bukkit.getRecipesFor(new ItemStack(itemType)).stream()
+                .filter(recipe -> recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe)
+                .toList();
         if (recipes.isEmpty()) {
             return ItemWeightCalculator.basic(registry, itemType).calculateWeight(registry, itemType, amount);
         }
 
         float weight = 0;
         for (final Recipe recipe : recipes) {
-            weight += this.calculateWeight(recipe, registry);
+            weight += (float) this.calculateWeight(recipe, registry);
         }
         return (weight / recipes.size()) * amount;
     }
 
-    private float calculateWeight(final Recipe recipe, final ItemWeightRegistry registry) {
-        float weight = 0;
+    private double calculateWeight(final Recipe recipe, final ItemWeightRegistry registry) {
+        double weight = 0;
         final int resultAmount = recipe.getResult().getAmount();
         if (recipe instanceof ShapedRecipe shapedRecipe) {
             weight = this.calculateWeight(shapedRecipe.getChoiceMap().values(), registry);
@@ -49,8 +57,8 @@ public class RecipeItemWeightCalculator implements ItemWeightCalculator {
         return weight / resultAmount;
     }
 
-    private float calculateWeight(final Collection<RecipeChoice> recipeChoices, final ItemWeightRegistry registry) {
-        float weight = 0;
+    private double calculateWeight(final Collection<RecipeChoice> recipeChoices, final ItemWeightRegistry registry) {
+        double weight = 0;
         for (final RecipeChoice value : recipeChoices) {
             List<Material> choices = List.of();
             if (value instanceof RecipeChoice.MaterialChoice matChoice) {
@@ -61,12 +69,14 @@ public class RecipeItemWeightCalculator implements ItemWeightCalculator {
                         .collect(Collectors.toList());
             }
 
-            float ingredientWeight = 0;
+            double ingredientWeight = 0;
             final int ingredients = choices.size();
             for (final Material ingredient : choices) {
                 ingredientWeight += ItemWeightCalculator.recipe(ingredient).calculateWeight(registry, ingredient, 1);
             }
-            weight += ingredientWeight / ingredients;
+            if (ingredientWeight > 0f) {
+                weight += ingredientWeight / ingredients;
+            }
         }
         return weight;
     }

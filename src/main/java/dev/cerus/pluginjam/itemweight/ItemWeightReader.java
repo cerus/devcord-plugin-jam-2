@@ -2,6 +2,8 @@ package dev.cerus.pluginjam.itemweight;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -55,6 +57,14 @@ public class ItemWeightReader {
                         count++;
                     }
                 }
+            } else if (key.startsWith("!")) {
+                final String regex = key.substring(1);
+                final float weight = (float) weightConfig.getDouble(key);
+                final List<Material> mats = Arrays.stream(Material.values())
+                        .filter(v -> v.name().matches(regex))
+                        .toList();
+                mats.forEach(m -> this.registry.register(m, weight));
+                count += mats.size();
             } else if (key.startsWith("minecraft:")) {
                 final Material material = Material.matchMaterial(key);
                 if (material != null) {
